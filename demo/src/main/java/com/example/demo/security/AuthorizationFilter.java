@@ -36,10 +36,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 		chain.doFilter(req, res);
 	}
 
+	@SuppressWarnings("deprecation")
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req) {
 		String token = req.getHeader("Authorization");
 		if (token != null) {
-			String user = Jwts.parser().setSigningKey("SECRET_KEY".getBytes())
+			String user = Jwts.parser().setSigningKey(System.getenv("SECRET_KEY").getBytes())
 											.parseClaimsJws(token.replace("Bearer", ""))
 											.getBody()
 											.getSubject();

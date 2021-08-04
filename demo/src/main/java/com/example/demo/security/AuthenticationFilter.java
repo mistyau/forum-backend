@@ -48,15 +48,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void successfulAuthentication(HttpServletRequest req,
 											HttpServletResponse res,
 											FilterChain chain,
 											Authentication auth) throws IOException {
-		Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512); // TODO: should be read from app config
 		String token = Jwts.builder()
 				.setSubject(((User) auth.getPrincipal()).getUsername())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-				.signWith(key)    
+				.signWith(SignatureAlgorithm.HS512, System.getenv("SECRET_KEY").getBytes())    
 				.compact();
 		res.addHeader("Authorization", "Bearer " + token);
 	}
