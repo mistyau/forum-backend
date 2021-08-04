@@ -12,7 +12,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping(path="api/users")
+@RequestMapping(path="/api/v1/users")
 public class UserController {
 	
 	@Autowired

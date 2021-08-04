@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.PostCollectionException;
@@ -20,6 +21,7 @@ import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
 
 @RestController
+@RequestMapping("/api/v1")
 public class PostController {
 	
 	@Autowired
@@ -31,13 +33,13 @@ public class PostController {
 		return new ResponseEntity<>(posts, posts.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("thread/{id}/posts")
+	@GetMapping("/threads/{id}/posts")
 	public ResponseEntity<?> getAllThreadPosts(@PathVariable("id") String id) {
 		List<Post> posts = postService.getAllThreadPosts(id);
 		return new ResponseEntity<>(posts, posts.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping("/thread/{id}/post")
+	@PostMapping("/users/{username}/threads/{id}/posts")
 	public ResponseEntity<?> createPost(@PathVariable("id") String id, @RequestBody Post post) {
 		try {
 			postService.createPost(id, post);
@@ -49,7 +51,7 @@ public class PostController {
 		}
 	}
 	
-	@GetMapping("/post/{id}")
+	@GetMapping("/threads/{thread_id}/posts/{id}")
 	public ResponseEntity<?> getSinglePost(@PathVariable("id") String id) {
 		try {
 			return new ResponseEntity<>(postService.getSinglePost(id), HttpStatus.OK);
@@ -58,7 +60,7 @@ public class PostController {
 		}
 	}
 	
-	@PutMapping("/post/{id}")
+	@PutMapping("/users/{username}/threads/{thread_id}/posts/{id}")
 	public ResponseEntity<?> updateById(@PathVariable("id") String id, @RequestBody Post post) {
 		try {
 			postService.updatePost(id, post);
@@ -70,7 +72,7 @@ public class PostController {
 		}
 	}
 	
-	@DeleteMapping("/post/{id}")
+	@DeleteMapping("/users/{username}/threads/{thread_id}/posts/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
 		try {
 			postService.deletePostById(id);

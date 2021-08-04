@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ThreadCollectionException;
@@ -20,6 +21,7 @@ import com.example.demo.model.Thread;
 import com.example.demo.service.ThreadService;
 
 @RestController
+@RequestMapping(path="/api/v1")
 public class ThreadController {
 	
 	@Autowired
@@ -31,7 +33,7 @@ public class ThreadController {
 		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping("/thread")
+	@PostMapping("/users/{username}/threads")
 	public ResponseEntity<?> createThread(@RequestBody Thread thread) {
 		try {
 			threadService.createThread(thread);
@@ -43,7 +45,7 @@ public class ThreadController {
 		}
 	}
 	
-	@GetMapping("/thread/{id}")
+	@GetMapping("/threads/{id}")
 	public ResponseEntity<?> getSingleThread(@PathVariable("id") String id) {
 		try {
 			return new ResponseEntity<>(threadService.getSingleThread(id), HttpStatus.OK);
@@ -52,7 +54,7 @@ public class ThreadController {
 		}
 	}
 	
-	@PutMapping("/thread/{id}")
+	@PutMapping("/users/{username}/threads/{id}")
 	public ResponseEntity<?> updateById(@PathVariable("id") String id, @RequestBody Thread thread) {
 		try {
 			threadService.updateThread(id, thread);
@@ -64,7 +66,7 @@ public class ThreadController {
 		}
 	}
 	
-	@DeleteMapping("/thread/{id}")
+	@DeleteMapping("/users/{username}/threads/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
 		try {
 			threadService.deleteThreadById(id);
