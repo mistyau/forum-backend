@@ -23,6 +23,9 @@ public class Thread {
 	@Id
 	private String id;
 	
+	@NotNull(message="User id cannot be null")
+	private String userId;
+	
 	@NotNull(message="Subject cannot be null")
 	private String subject;
 	

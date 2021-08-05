@@ -7,7 +7,7 @@ import com.example.demo.model.Post;
 
 public interface PostService {
 	
-	public void createPost(String threadId, Post post) throws PostCollectionException;
+	public void createPost(String username, String threadId, Post post) throws PostCollectionException;
 	
 	public List<Post> getAllPosts();
 	
@@ -15,7 +15,7 @@ public interface PostService {
 	
 	public Post getSinglePost(String id) throws PostCollectionException;
 	
-	public void updatePost(String id, Post post) throws PostCollectionException;
+	public void updatePost(String username, String id, Post post) throws PostCollectionException;
 	
-	public void deletePostById(String id) throws PostCollectionException;
+	public void deletePostById(String username, String id) throws PostCollectionException;
 }

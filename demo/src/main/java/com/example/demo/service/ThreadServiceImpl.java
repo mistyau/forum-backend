@@ -12,11 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Thread;
+import com.example.demo.model.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ThreadRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class ThreadServiceImpl implements ThreadService {
+	
+	@Autowired UserRepository userRepo;
 
 	@Autowired
 	private ThreadRepository threadRepo;
@@ -25,11 +29,13 @@ public class ThreadServiceImpl implements ThreadService {
 	private PostRepository postRepo;
 	
 	@Override
-	public void createThread(Thread thread) throws ThreadCollectionException {
+	public void createThread(String username, Thread thread) throws ThreadCollectionException {
 		Optional<Thread> threadOptional = threadRepo.findBySubject(thread.getSubject());
 		if (threadOptional.isPresent()) {
 			throw new ThreadCollectionException(ThreadCollectionException.ThreadAlreadyExists());
 		} else {
+			User user = userRepo.findByUsername(username);
+			thread.setUserId(user.getId());
 			thread.setCreated(new Date(System.currentTimeMillis()));
 			threadRepo.save(thread);
 		}
@@ -57,7 +63,7 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void updateThread(String id, Thread thread) throws ThreadCollectionException {
+	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException {
 		Optional<Thread> threadWithId = threadRepo.findById(id);
 		Optional<Thread> threadWithSameName = threadRepo.findBySubject(thread.getSubject());
 		
@@ -77,7 +83,7 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void deleteThreadById(String id) throws ThreadCollectionException {
+	public void deleteThreadById(String username, String id) throws ThreadCollectionException {
 		Optional<Thread> threadOptional = threadRepo.findById(id);
 		if (!threadOptional.isPresent()) {
 			throw new ThreadCollectionException(ThreadCollectionException.NotFoundException(id));

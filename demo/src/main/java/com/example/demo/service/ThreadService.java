@@ -9,13 +9,13 @@ import com.example.demo.model.Thread;
 
 public interface ThreadService{
 	
-	public void createThread(Thread thread) throws ThreadCollectionException;
+	public void createThread(String username, Thread thread) throws ThreadCollectionException;
 	
 	public List<Thread> getAllThreads();
 	
 	public Thread getSingleThread(String id) throws ThreadCollectionException;
 	
-	public void updateThread(String id, Thread thread) throws ThreadCollectionException;
+	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException;
 	
-	public void deleteThreadById(String id) throws ThreadCollectionException;
+	public void deleteThreadById(String username, String id) throws ThreadCollectionException;
 }

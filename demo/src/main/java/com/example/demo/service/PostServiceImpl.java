@@ -11,11 +11,16 @@ import org.springframework.stereotype.Service;
 import com.example.demo.exception.PostCollectionException;
 import com.example.demo.model.Post;
 import com.example.demo.model.Thread;
+import com.example.demo.model.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ThreadRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class PostServiceImpl implements PostService {
+	
+	@Autowired
+	private UserRepository userRepo;
 	
 	@Autowired
 	private ThreadRepository threadRepo;
@@ -24,11 +29,13 @@ public class PostServiceImpl implements PostService {
 	private PostRepository postRepo;
 
 	@Override
-	public void createPost(String threadId, Post post) throws PostCollectionException {
+	public void createPost(String username, String threadId, Post post) throws PostCollectionException {
 		Optional<Thread> threadOptional = threadRepo.findById(threadId);
 		if (!threadOptional.isPresent()) {
 			throw new PostCollectionException(PostCollectionException.ThreadNotFound(threadId));
 		} else {
+			User user = userRepo.findByUsername(username);
+			post.setUserId(user.getId());
 			post.setThreadId(threadId);
 			post.setCreatedAt(new Date(System.currentTimeMillis()));
 			postRepo.save(post);
@@ -67,7 +74,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void updatePost(String id, Post post) throws PostCollectionException {
+	public void updatePost(String username, String id, Post post) throws PostCollectionException {
 		Optional<Post> postWithId = postRepo.findById(id);
 		
 		if (postWithId.isPresent()) {
@@ -81,7 +88,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void deletePostById(String id) throws PostCollectionException {
+	public void deletePostById(String username, String id) throws PostCollectionException {
 		Optional<Post> postOptional = postRepo.findById(id);
 		if (!postOptional.isPresent()) {
 			throw new PostCollectionException(PostCollectionException.NotFoundException(id));

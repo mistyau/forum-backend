@@ -22,10 +22,13 @@ public class Post {
 	@Id
 	private String id;
 	
-	@NotNull(message = "thread id cannot be null")
+	@NotNull(message="User id cannot be null")
+	private String userId;
+	
+	@NotNull(message = "Thread id cannot be null")
 	private String threadId;
 	
-	@NotNull(message = "content cannot be null")
+	@NotNull(message = "Content cannot be null")
 	private String content;
 	
 	private Date createdAt;
