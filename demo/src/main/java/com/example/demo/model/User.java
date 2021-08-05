@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class User implements Serializable {
 	@Id
 	private String id;
 	
+	@Indexed(unique=true)
 	@NotNull
 	private String username;
 	
