@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable().authorizeRequests() // disable csrf because i don't use session cookies...i think
 			.antMatchers(AUTH_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.POST, "/api/v1/users/signup").permitAll()
+			.antMatchers("/api/v1/users/{username}/**").access("@userSecurity.hasUsername(authentication, #username)")
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(new AuthenticationFilter(authenticationManager()))
