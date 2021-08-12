@@ -58,6 +58,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, System.getenv("SECRET_KEY").getBytes())    
 				.compact();
-		res.addHeader("Authorization", "Bearer " + token);
+		//res.addHeader("Authorization", "Bearer " + token);
+		
+		//String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
+		res.setContentType("application/json");
+		res.setCharacterEncoding("UTF-8");
+		
+		String body = "{\"" + "username" + "\":\"" + ((User) auth.getPrincipal()).getUsername() 
+						+ "\"," + "\"" + "token" + "\":\"" + token + "\"," + "\n"
+						+ "\"" + "tokenType" + "\":\"" + "Bearer"
+						+ "\"}";
+		
+		res.getWriter().write(body);
+		res.getWriter().flush();
 	}
 }
