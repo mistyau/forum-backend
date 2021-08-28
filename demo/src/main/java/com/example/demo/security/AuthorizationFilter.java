@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MissingClaimException;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -45,6 +46,15 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 											.getBody()
 											.getSubject();
 			if (user != null) {
+				try {
+					Jwts.parserBuilder().require("role", "ACCESS_TOKEN")
+						.setSigningKey(System.getenv("SECRET_KEY").getBytes())
+						.build()
+						.parseClaimsJws(token.replace("Bearer", ""));
+				} catch(MissingClaimException ice) {
+					
+				}
+				
 				return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
 			}
 			return null;

@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] AUTH_WHITELIST = {		
 			"/api/v1/threads",
 			"/api/v1/threads/**",
+			"/api/v1/users/refresh/token"
 	};
 	
 	@Bean
