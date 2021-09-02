@@ -3,7 +3,7 @@ package com.example.demo.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -30,11 +30,10 @@ public class User implements Serializable {
 	private String id;
 	
 	@Indexed(unique=true)
-	@NotNull
+	@NotBlank(message = "Username cannot be blank")
 	private String username;
-	
-	// TODO: validate password
-	@NotNull
+
+	@NotBlank(message = "Password cannot be blank")
 	private String password;
 	
 	private Date createdAt;
