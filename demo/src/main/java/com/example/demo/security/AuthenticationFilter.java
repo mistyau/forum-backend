@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.demo.model.RefreshToken;
 import com.example.demo.repository.RefreshTokenRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.JwtBuilder;
@@ -33,11 +35,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private AuthenticationManager authenticationManager;
 	private static final long EXPIRATION_TIME = 900_000;
 	private static final long REFRESH_EXPIRATION_TIME = 604_800_000;
+	@Autowired RefreshTokenService refreshTokenService;
 	
-	public AuthenticationFilter(AuthenticationManager authenticationManager) {
+	public AuthenticationFilter(AuthenticationManager authenticationManager, ApplicationContext ctx) {
 		this.authenticationManager = authenticationManager;
+		this.refreshTokenService = ctx.getBean(RefreshTokenService.class);
 		
-		setFilterProcessesUrl("/api/v1/users/login");
+		setFilterProcessesUrl("/api/v1/auth/login");
 	}
 	
 	@Override
@@ -66,13 +70,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 				.signWith(SignatureAlgorithm.HS512, System.getenv("SECRET_KEY").getBytes())    
 				.compact();
 	
+		String jti = UUID.randomUUID().toString();
 		String refreshToken = Jwts.builder()
 				.setSubject(((User) auth.getPrincipal()).getUsername())
 				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
 				.claim("role", "REFRESH_TOKEN")
-				.setId(UUID.randomUUID().toString())
+				.setId(jti)
 				.signWith(SignatureAlgorithm.HS512, System.getenv("SECRET_KEY").getBytes())    
 				.compact();
+		
+		refreshTokenService.saveRefreshToken(((User) auth.getPrincipal()).getUsername(), jti);
 		
 		//res.addHeader("Authorization", "Bearer " + token);
 		
@@ -81,9 +88,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		res.setCharacterEncoding("UTF-8");
 		
 		String body = "{\"" + "username" + "\":\"" + ((User) auth.getPrincipal()).getUsername() 
-						+ "\"," + "\"" + "token" + "\":\"" + token + "\"," + "\n"
-						+ "\"" + "refreshToken" + "\":\"" + refreshToken + "\","
-						+ "\"" + "type" + "\":\"" + "Bearer"
+						+ "\"," + "\"" + "access_token" + "\":\"" + token + "\"," + "\n"
+						+ "\"" + "refresh_token" + "\":\"" + refreshToken + "\","
+						+ "\"" + "token_type" + "\":\"" + "Bearer" + "\","
+						+ "\"" + "expires_in" + "\":" + "\"" + "900"
 						+ "\"}";
 		
 		res.getWriter().write(body);
