@@ -12,6 +12,8 @@ import com.example.demo.model.Post;
 public interface PostRepository extends MongoRepository<Post, String> {
 	List<Post> findByThreadId(final String threadId);
 	
+	List<Post> findByAuthor(String author);
+	
 	@DeleteQuery("{'threadId': ?0}")
 	void deleteByThreadId(final String threadId);
 }

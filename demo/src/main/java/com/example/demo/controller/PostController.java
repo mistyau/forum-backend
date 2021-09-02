@@ -60,11 +60,20 @@ public class PostController {
 		}
 	}
 	
-	@PutMapping("/users/{username}/threads/{thread_id}/posts/{id}")
+	@GetMapping("/users/{username}/posts")
+	public ResponseEntity<?> getUserPosts(@PathVariable("username") String username) {
+		try {
+			return new ResponseEntity<>(postService.getAllUserPosts(username), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping("/users/{username}/posts/{id}")
 	public ResponseEntity<?> updateById(@PathVariable("username") String username, @PathVariable("id") String id, @RequestBody Post post) {
 		try {
 			postService.updatePost(username, id, post);
-			return new ResponseEntity<>("Updated thread witht id " + id, HttpStatus.OK);
+			return new ResponseEntity<>("Updated post with id " + id, HttpStatus.OK);
 		} catch (ConstraintViolationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
 		} catch (PostCollectionException e) {
@@ -72,7 +81,7 @@ public class PostController {
 		}
 	}
 	
-	@DeleteMapping("/users/{username}/threads/{thread_id}/posts/{id}")
+	@DeleteMapping("/users/{username}/posts/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable("username") String username, @PathVariable("id") String id) {
 		try {
 			postService.deletePostById(username, id);

@@ -25,6 +25,9 @@ public class Post {
 	@NotNull(message="User id cannot be null")
 	private String userId;
 	
+	@NotNull(message="Username cannot be null")
+	private String author;
+	
 	@NotNull(message = "Thread id cannot be null")
 	private String threadId;
 	

@@ -36,6 +36,7 @@ public class PostServiceImpl implements PostService {
 		} else {
 			User user = userRepo.findByUsername(username);
 			post.setUserId(user.getId());
+			post.setAuthor(username);
 			post.setThreadId(threadId);
 			post.setCreatedAt(new Date(System.currentTimeMillis()));
 			postRepo.save(post);
@@ -56,6 +57,16 @@ public class PostServiceImpl implements PostService {
 	public List<Post> getAllThreadPosts(String id) {
 		List<Post> posts = postRepo.findByThreadId(id);
 		
+		if (posts.size() > 0) {
+			return posts;
+		} else {
+			return new ArrayList<Post>();
+		}
+	}
+	
+	@Override
+	public List<Post> getAllUserPosts(String username) {
+		List<Post> posts = postRepo.findByAuthor(username);
 		if (posts.size() > 0) {
 			return posts;
 		} else {

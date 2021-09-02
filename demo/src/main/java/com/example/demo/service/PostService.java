@@ -13,6 +13,8 @@ public interface PostService {
 	
 	public List<Post> getAllThreadPosts(String id);
 	
+	public List<Post> getAllUserPosts(String author);
+	
 	public Post getSinglePost(String id) throws PostCollectionException;
 	
 	public void updatePost(String username, String id, Post post) throws PostCollectionException;
