@@ -30,21 +30,26 @@ public class ThreadServiceImpl implements ThreadService {
 	
 	@Override
 	public void createThread(String username, Thread thread) throws ThreadCollectionException {
-		Optional<Thread> threadOptional = threadRepo.findBySubject(thread.getSubject());
-		if (threadOptional.isPresent()) {
-			throw new ThreadCollectionException(ThreadCollectionException.ThreadAlreadyExists());
-		} else {
-			User user = userRepo.findByUsername(username);
-			thread.setUserId(user.getId());
-			thread.setCreated(new Date(System.currentTimeMillis()));
-			threadRepo.save(thread);
-		}
-		
+		User user = userRepo.findByUsername(username);
+		thread.setUserId(user.getId());
+		thread.setAuthor(username);
+		thread.setCreatedAt(new Date(System.currentTimeMillis()));
+		threadRepo.save(thread);
 	}
 
 	@Override
 	public List<Thread> getAllThreads() {
 		List<Thread> threads = threadRepo.findAll();
+		if (threads.size() > 0) {
+			return threads;
+		} else {
+			return new ArrayList<Thread>();
+		}
+	}
+	
+	@Override
+	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException {
+		List<Thread> threads = threadRepo.findByAuthor(author);
 		if (threads.size() > 0) {
 			return threads;
 		} else {
@@ -75,6 +80,7 @@ public class ThreadServiceImpl implements ThreadService {
 			
 			Thread threadToUpdate = threadWithId.get();
 			threadToUpdate.setSubject(thread.getSubject());
+			threadToUpdate.setContent(thread.getContent());
 			threadToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 			threadRepo.save(threadToUpdate);
 		} else {

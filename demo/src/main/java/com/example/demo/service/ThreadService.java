@@ -13,6 +13,8 @@ public interface ThreadService{
 	
 	public List<Thread> getAllThreads();
 	
+	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException;
+	
 	public Thread getSingleThread(String id) throws ThreadCollectionException;
 	
 	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException;

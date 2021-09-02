@@ -45,6 +45,15 @@ public class ThreadController {
 		}
 	}
 	
+	@GetMapping("/users/{username}/threads")
+	public ResponseEntity<?> getUserThreads(@PathVariable("username") String username) {
+		try {
+			return new ResponseEntity<>(threadService.getAllUserThreads(username), HttpStatus.OK);
+		} catch (ThreadCollectionException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@GetMapping("/threads/{id}")
 	public ResponseEntity<?> getSingleThread(@PathVariable("id") String id) {
 		try {

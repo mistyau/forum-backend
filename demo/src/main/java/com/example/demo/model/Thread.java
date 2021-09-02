@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
@@ -26,10 +27,15 @@ public class Thread {
 	@NotNull(message="User id cannot be null")
 	private String userId;
 	
-	@NotNull(message="Subject cannot be null")
+	@NotNull(message="Username cannot be null")
+	private String author; // don't really care about data redundancy in mongodb
+	
+	@NotBlank(message="Subject cannot be blank")
 	private String subject;
 	
-	private Date created;
+	private String content;
+	
+	private Date createdAt;
 	
 	private Date updatedAt;
 	

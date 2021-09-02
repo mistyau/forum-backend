@@ -18,4 +18,8 @@ public class ThreadCollectionException extends Exception {
 	public static String ThreadAlreadyExists() {
 		return "Thread with given name already exists";
 	}
+	
+	public static String AuthorNotFound(String author) {
+		return "Thread with " + author + "not found!";
+	}
 }
