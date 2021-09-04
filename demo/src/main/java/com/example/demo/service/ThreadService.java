@@ -15,6 +15,8 @@ public interface ThreadService{
 	
 	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException;
 	
+	public List<Thread> getAllTagThreads(String thread);
+	
 	public Thread getSingleThread(String id) throws ThreadCollectionException;
 	
 	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException;

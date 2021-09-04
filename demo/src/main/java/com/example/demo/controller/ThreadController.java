@@ -54,6 +54,12 @@ public class ThreadController {
 		}
 	}
 	
+	@GetMapping("/threads/search/{tag}")
+	public ResponseEntity<?> getTagThreads(@PathVariable("tag") String tag) {
+		List<Thread> threads = threadService.getAllTagThreads(tag);
+		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+	}
+	
 	@GetMapping("/threads/{id}")
 	public ResponseEntity<?> getSingleThread(@PathVariable("id") String id) {
 		try {

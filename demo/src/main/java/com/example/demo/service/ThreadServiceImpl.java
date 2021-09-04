@@ -99,5 +99,15 @@ public class ThreadServiceImpl implements ThreadService {
 			postRepo.deleteByThreadId(id);
 		}
 	}
+
+	@Override
+	public List<Thread> getAllTagThreads(String thread) {
+		List<Thread> threads = threadRepo.findByTag(thread);
+		if (threads.size() > 0) {
+			return threads;
+		} else {
+			return new ArrayList<Thread>();
+		}
+	}
 	
 }

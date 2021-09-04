@@ -16,4 +16,7 @@ public interface ThreadRepository extends MongoRepository<Thread, String> {
 	Optional<Thread> findBySubject(String subject);
 	
 	List<Thread> findByAuthor(String author);
+	
+	@Query("{'tags': ?0 }")
+	List<Thread> findByTag(String tag);
 }
