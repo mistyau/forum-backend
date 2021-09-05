@@ -8,6 +8,10 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ThreadCollectionException;
@@ -105,6 +109,17 @@ public class ThreadServiceImpl implements ThreadService {
 		List<Thread> threads = threadRepo.findByTag(thread);
 		if (threads.size() > 0) {
 			return threads;
+		} else {
+			return new ArrayList<Thread>();
+		}
+	}
+
+	@Override
+	public List<Thread> getAll(int page, int size, Sort sort) {
+		Pageable pageable = PageRequest.of(page, size, sort);
+		Page<Thread> threadsPage = threadRepo.findAll(pageable);
+		if (threadsPage.getTotalElements() > 0) {
+			return threadsPage.getContent();
 		} else {
 			return new ArrayList<Thread>();
 		}

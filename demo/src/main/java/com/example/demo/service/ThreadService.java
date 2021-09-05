@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.data.domain.Sort;
+
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Thread;
 
@@ -12,6 +14,8 @@ public interface ThreadService{
 	public void createThread(String username, Thread thread) throws ThreadCollectionException;
 	
 	public List<Thread> getAllThreads();
+	
+	public List<Thread> getAll(int page, int size, Sort sort);
 	
 	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException;
 	

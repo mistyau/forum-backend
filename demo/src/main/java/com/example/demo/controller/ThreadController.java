@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ThreadCollectionException;
@@ -30,6 +32,19 @@ public class ThreadController {
 	@GetMapping("/threads")
 	public ResponseEntity<?> getAllThreads() {
 		List<Thread> threads = threadService.getAllThreads();
+		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping(path="/threads", params = {"page", "size", "sort"})
+	public ResponseEntity<?> getAll(@RequestParam("page") int page, 
+			@RequestParam("size") int size, @RequestParam("sort") String sort) {
+		Sort threadSort;
+		if (sort.equals("new")) {
+			threadSort = Sort.by("createdAt").descending();
+		} else {
+			threadSort = Sort.by("createdAt").ascending();
+		}
+		List<Thread> threads = threadService.getAll(page, size, threadSort);
 		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
