@@ -115,14 +115,9 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public List<Thread> getAll(int page, int size, Sort sort) {
+	public Page<Thread> getAll(int page, int size, Sort sort) {
 		Pageable pageable = PageRequest.of(page, size, sort);
-		Page<Thread> threadsPage = threadRepo.findAll(pageable);
-		if (threadsPage.getTotalElements() > 0) {
-			return threadsPage.getContent();
-		} else {
-			return new ArrayList<Thread>();
-		}
+		return threadRepo.findAll(pageable);
 	}
 	
 }

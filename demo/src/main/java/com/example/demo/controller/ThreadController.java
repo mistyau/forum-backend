@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +47,14 @@ public class ThreadController {
 		} else {
 			threadSort = Sort.by("createdAt").ascending();
 		}
-		List<Thread> threads = threadService.getAll(page, size, threadSort);
-		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+		Page<Thread> threadPages = threadService.getAll(page, size, threadSort);
+		List<Thread> threads = threadPages.getContent();
+		Map<String, Object> response = new HashMap<>();
+		response.put("threads", threads);
+		response.put("currentPage", threadPages.getNumber());
+		response.put("totalCount", threadPages.getTotalElements());
+		response.put("totalPages", threadPages.getTotalPages());
+		return new ResponseEntity<>(response, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping("/users/{username}/threads")
