@@ -26,5 +26,7 @@ public interface ThreadService{
 	
 	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException;
 	
+	public long incLikes(String id) throws ThreadCollectionException;
+	
 	public void deleteThreadById(String username, String id) throws ThreadCollectionException;
 }

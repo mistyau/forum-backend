@@ -12,6 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ThreadCollectionException;
@@ -20,6 +24,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
+import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class ThreadServiceImpl implements ThreadService {
@@ -32,11 +37,15 @@ public class ThreadServiceImpl implements ThreadService {
 	@Autowired
 	private PostRepository postRepo;
 	
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
 	@Override
 	public void createThread(String username, Thread thread) throws ThreadCollectionException {
 		User user = userRepo.findByUsername(username);
 		thread.setUserId(user.getId());
 		thread.setAuthor(username);
+		thread.setLikes(0);
 		thread.setCreatedAt(new Date(System.currentTimeMillis()));
 		threadRepo.save(thread);
 	}
@@ -74,14 +83,8 @@ public class ThreadServiceImpl implements ThreadService {
 	@Override
 	public void updateThread(String username, String id, Thread thread) throws ThreadCollectionException {
 		Optional<Thread> threadWithId = threadRepo.findById(id);
-		Optional<Thread> threadWithSameName = threadRepo.findBySubject(thread.getSubject());
 		
 		if (threadWithId.isPresent()) {
-			
-			if (threadWithSameName.isPresent() && !threadWithSameName.get().getId().equals(id)) {
-				throw new ThreadCollectionException(ThreadCollectionException.ThreadAlreadyExists());
-			}
-			
 			Thread threadToUpdate = threadWithId.get();
 			threadToUpdate.setSubject(thread.getSubject());
 			threadToUpdate.setContent(thread.getContent());
@@ -118,6 +121,18 @@ public class ThreadServiceImpl implements ThreadService {
 	public Page<Thread> getAll(int page, int size, Sort sort) {
 		Pageable pageable = PageRequest.of(page, size, sort);
 		return threadRepo.findAll(pageable);
+	}
+
+	@Override
+	public long incLikes(String id) throws ThreadCollectionException {
+		Query query = new Query(Criteria.where("id").is(id));
+		Thread thread = mongoTemplate.findOne(query, Thread.class);
+		if (thread == null) {
+			throw new ThreadCollectionException(ThreadCollectionException.NotFoundException(id));
+		}
+		Update update = new Update().inc("likes", 1);
+		UpdateResult ur = mongoTemplate.updateFirst(query, update, Thread.class);
+		return ur.getModifiedCount();
 	}
 	
 }

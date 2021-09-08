@@ -37,6 +37,8 @@ public class Thread {
 	
 	private List<String> tags;
 	
+	private long likes;
+	
 	private Date createdAt;
 	
 	private Date updatedAt;
