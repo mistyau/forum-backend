@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ThreadCollectionException;
+import com.example.demo.model.Liked;
 import com.example.demo.model.Thread;
+import com.example.demo.service.LikedService;
 import com.example.demo.service.ThreadService;
 
 @RestController
@@ -31,6 +33,8 @@ public class ThreadController {
 	
 	@Autowired
 	private ThreadService threadService;
+	
+	@Autowired LikedService likedService;
 	
 	@GetMapping("/threads")
 	public ResponseEntity<?> getAllThreads() {
@@ -103,6 +107,26 @@ public class ThreadController {
 		} catch (ThreadCollectionException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@PostMapping("/users/{username}/threads/{id}/likes")
+	public ResponseEntity<?> likeThread(@PathVariable("username") String username, @PathVariable("id") String id) {
+		try {
+			threadService.incLikes(id);
+			likedService.createLike(username, id);
+			return new ResponseEntity<>("Liked thread with id " + id, HttpStatus.OK);
+		} catch (ThreadCollectionException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping("/users/{username}/threads/{id}/likes")
+	public ResponseEntity<?> userLikedThread(@PathVariable("username") String username, @PathVariable("id") String id) {
+		Liked liked = likedService.getSingleLiked(id, username);
+		if (liked == null) {
+			return new ResponseEntity<>("No record of like", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(liked, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/users/{username}/threads/{id}")
