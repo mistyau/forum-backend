@@ -48,8 +48,12 @@ public class ThreadController {
 		Sort threadSort;
 		if (sort.equals("new")) {
 			threadSort = Sort.by("createdAt").descending();
-		} else {
+		} else if (sort.equals("old")) {
 			threadSort = Sort.by("createdAt").ascending();
+		} else if (sort.equals("popular")) {
+			threadSort = Sort.by("likes").descending();
+		} else {
+			threadSort = Sort.by("createdAt").descending();
 		}
 		Page<Thread> threadPages = threadService.getAll(page, size, threadSort);
 		List<Thread> threads = threadPages.getContent();
