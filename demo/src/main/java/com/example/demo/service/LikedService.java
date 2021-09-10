@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import com.example.demo.exception.LikedCollectionException;
 import com.example.demo.model.Liked;
 
 public interface LikedService {
@@ -12,5 +13,5 @@ public interface LikedService {
 	
 	public void createLike(String username, String threadId);
 	
-	public void deleteLike(String username, String threadId);
+	public void deleteLike(String id) throws LikedCollectionException;
 }

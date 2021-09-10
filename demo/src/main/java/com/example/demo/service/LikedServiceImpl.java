@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.LikedCollectionException;
 import com.example.demo.model.Liked;
 import com.example.demo.model.User;
 import com.example.demo.repository.LikedRepository;
@@ -50,9 +51,13 @@ public class LikedServiceImpl implements LikedService {
 	}
 
 	@Override
-	public void deleteLike(String username, String threadId) {
-		// TODO Auto-generated method stub
-		
+	public void deleteLike(String id) throws LikedCollectionException {
+		Optional<Liked> likedOptional = likedRepo.findById(id);
+		if (!likedOptional.isPresent()) {
+			throw new LikedCollectionException(LikedCollectionException.LikeAlreadyExists());
+		} else {
+			likedRepo.deleteById(id);
+		}
 	}
 
 }
