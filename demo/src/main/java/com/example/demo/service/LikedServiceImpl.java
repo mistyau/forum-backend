@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.LikedCollectionException;
+import com.example.demo.exception.ThreadCollectionException;
+import com.example.demo.exception.UserCollectionException;
 import com.example.demo.model.Liked;
 import com.example.demo.model.User;
 import com.example.demo.repository.LikedRepository;
@@ -23,9 +26,17 @@ public class LikedServiceImpl implements LikedService {
 	UserRepository userRepo;
 
 	@Override
-	public List<Liked> getUserLikes(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Liked> getUserLikes(String username) throws UserCollectionException {
+		User user = userRepo.findByUsername(username);
+		if (user == null) {
+			throw new UserCollectionException(UserCollectionException.UserDoesNotExist(username));
+		}
+		List<Liked> likes = likedRepo.findByUserId(user.getId());
+		if (likes.size() > 0) {
+			return likes;
+		} else {
+			return new ArrayList<Liked>();
+		}
 	}
 
 	@Override
@@ -51,12 +62,13 @@ public class LikedServiceImpl implements LikedService {
 	}
 
 	@Override
-	public void deleteLike(String id) throws LikedCollectionException {
-		Optional<Liked> likedOptional = likedRepo.findById(id);
+	public void deleteLike(String username, String threadId) throws LikedCollectionException, ThreadCollectionException {
+		User user = userRepo.findByUsername(username);
+		Optional<Liked> likedOptional = likedRepo.findByThreadIdAndUserId(threadId, user.getId());
 		if (!likedOptional.isPresent()) {
-			throw new LikedCollectionException(LikedCollectionException.LikeAlreadyExists());
+			throw new LikedCollectionException(LikedCollectionException.NotFoundException());
 		} else {
-			likedRepo.deleteById(id);
+			likedRepo.deleteById(likedOptional.get().getId());
 		}
 	}
 
