@@ -11,8 +11,8 @@ public class LikedCollectionException extends Exception {
 		super(message);
 	}
 	
-	public static String NotFoundException(String id) {
-		return "Like with " + id + " not found!";
+	public static String NotFoundException() {
+		return "Like not found!";
 	}
 	
 	public static String LikeAlreadyExists() {
