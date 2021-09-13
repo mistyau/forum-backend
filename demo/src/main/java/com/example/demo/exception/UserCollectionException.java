@@ -11,6 +11,10 @@ public class UserCollectionException extends Exception {
 		super(message);
 	}
 	
+	public static String UserDoesNotExist(String username) {
+		return "User " + username + " does not exist!";
+	}
+	
 	public static String UsernameAlreadyExists() {
 		return "Username already exists!";
 	}
