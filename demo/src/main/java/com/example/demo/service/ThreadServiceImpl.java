@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -124,13 +126,13 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public long incLikes(String id) throws ThreadCollectionException {
+	public long incLikes(String id, int val) throws ThreadCollectionException {
 		Query query = new Query(Criteria.where("id").is(id));
 		Thread thread = mongoTemplate.findOne(query, Thread.class);
 		if (thread == null) {
 			throw new ThreadCollectionException(ThreadCollectionException.NotFoundException(id));
 		}
-		Update update = new Update().inc("likes", 1);
+		Update update = new Update().inc("likes", val);
 		UpdateResult ur = mongoTemplate.updateFirst(query, update, Thread.class);
 		return ur.getModifiedCount();
 	}

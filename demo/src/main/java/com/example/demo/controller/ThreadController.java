@@ -34,7 +34,8 @@ public class ThreadController {
 	@Autowired
 	private ThreadService threadService;
 	
-	@Autowired LikedService likedService;
+	@Autowired 
+	private LikedService likedService;
 	
 	@GetMapping("/threads")
 	public ResponseEntity<?> getAllThreads() {
@@ -116,9 +117,9 @@ public class ThreadController {
 	@PostMapping("/users/{username}/threads/{id}/likes")
 	public ResponseEntity<?> likeThread(@PathVariable("username") String username, @PathVariable("id") String id) {
 		try {
-			threadService.incLikes(id);
 			likedService.createLike(username, id);
-			return new ResponseEntity<>("Liked thread with id " + id, HttpStatus.OK);
+			threadService.incLikes(id, 1);
+			return new ResponseEntity<>("Thread with id " + id + " liked", HttpStatus.OK);
 		} catch (ThreadCollectionException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
