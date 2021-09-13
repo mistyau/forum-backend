@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -35,10 +36,12 @@ public class Thread {
 	
 	private String content;
 	
+	@Indexed
 	private List<String> tags;
-	
+
 	private long likes;
 	
+	@Indexed
 	private Date createdAt;
 	
 	private Date updatedAt;
