@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,12 +24,14 @@ public class Post {
 	@Id
 	private String id;
 	
+	@Field(targetType = FieldType.OBJECT_ID)
 	@NotNull(message="User id cannot be null")
 	private String userId;
 	
 	@NotNull(message="Username cannot be null")
 	private String author;
 	
+	@Field(targetType = FieldType.OBJECT_ID)
 	@NotNull(message = "Thread id cannot be null")
 	private String threadId;
 	

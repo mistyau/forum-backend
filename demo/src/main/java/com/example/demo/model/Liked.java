@@ -5,6 +5,8 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +24,10 @@ public class Liked {
 	@Id
 	private String id;
 	
+	@Field(targetType = FieldType.OBJECT_ID)
 	private String threadId;
 	
+	@Field(targetType = FieldType.OBJECT_ID)
 	private String userId;
 	
 	private Date createdAt;
