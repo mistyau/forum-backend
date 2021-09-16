@@ -55,7 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.addFilter(new AuthenticationFilter(authenticationManager(), getApplicationContext()))
 			.addFilter(new AuthorizationFilter(authenticationManager()))
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // disable session creation
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // disable session creation
+			.and()
+			.headers()
+			.contentSecurityPolicy("script-src 'self'"); 
 	}
 	
 	@Bean
