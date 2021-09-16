@@ -27,7 +27,7 @@ public interface ThreadRepository extends MongoRepository<Thread, String> {
 			"  from: 'likes',\n" + 
 			"  let: {\n" + 
 			"    thread_id: '$_id',\n" + 
-			"    currentUser: ?0\n" + 
+			"    currentUser: {$toObjectId: ?0}\n" + 
 			"  },\n" + 
 			"  pipeline: [{\n" + 
 			"    $match: {\n" + 
@@ -42,7 +42,7 @@ public interface ThreadRepository extends MongoRepository<Thread, String> {
 			"  as: 'matches'\n" + 
 			"}}",
 			"{$addFields: {\n" + 
-			"  userLiked: { $in: [ ?0, \"$matches.userId\"] }\n" + 
+			"  userLiked: { $in: [ {$toObjectId: ?0}, \"$matches.userId\"] }\n" + 
 			"}}",
 			"{$project: {\n" + 
 			"  matches: 0\n" + 
