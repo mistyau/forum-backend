@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection="likes")
-@CompoundIndex(def="{'threadId': 1, 'userId': 1}, {'unique': true}")
+@CompoundIndex(def="{'threadId': 1, 'userId': 1}", unique=true)
 public class Liked {
 	
 	@Id
