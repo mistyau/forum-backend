@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Thread;
+import com.example.demo.model.ThreadAggregate;
 
 public interface ThreadService{
 	
@@ -17,6 +18,8 @@ public interface ThreadService{
 	public List<Thread> getAllThreads();
 	
 	public Page<Thread> getAll(int page, int size, Sort sort);
+	
+	public List<ThreadAggregate> getThreadsAggregated(String username, int page, int size, Sort sort);
 	
 	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException;
 	

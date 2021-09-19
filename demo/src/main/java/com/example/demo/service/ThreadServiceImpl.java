@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Thread;
+import com.example.demo.model.ThreadAggregate;
 import com.example.demo.model.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ThreadRepository;
@@ -135,6 +136,14 @@ public class ThreadServiceImpl implements ThreadService {
 		Update update = new Update().inc("likes", val);
 		UpdateResult ur = mongoTemplate.updateFirst(query, update, Thread.class);
 		return ur.getModifiedCount();
+	}
+
+	@Override
+	public List<ThreadAggregate> getThreadsAggregated(String username, int page, int size, Sort sort) {
+		User user = userRepo.findByUsername(username);
+		Pageable pageable = PageRequest.of(page, size, sort);
+		List<ThreadAggregate> threads = threadRepo.verySillyAggregation(user == null ? null : user.getId(), pageable);
+		return threads;
 	}
 	
 }
