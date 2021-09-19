@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Liked;
 import com.example.demo.model.Thread;
+import com.example.demo.model.ThreadAggregate;
 import com.example.demo.service.LikedService;
 import com.example.demo.service.ThreadService;
 
@@ -45,24 +47,32 @@ public class ThreadController {
 	
 	@GetMapping(path="/threads", params = {"page", "size", "sort"})
 	public ResponseEntity<?> getAll(@RequestParam("page") int page, 
-			@RequestParam("size") int size, @RequestParam("sort") String sort) {
+			@RequestParam("size") int size, @RequestParam("sort") String sort,
+			Principal principal) {
 		Sort threadSort;
 		if (sort.equals("new")) {
-			threadSort = Sort.by("createdAt").descending();
+			threadSort = Sort.by("createdAt", "id").descending();
 		} else if (sort.equals("old")) {
 			threadSort = Sort.by("createdAt").ascending();
 		} else if (sort.equals("popular")) {
-			threadSort = Sort.by("likes").descending();
+			// 'likes' is not unique and does not guarantee
+			// ..a consistent sort order, so we have to sort
+			// ..with an additional field, 'id', which is
+			// ..guaranteed to be unique 
+			threadSort = Sort.by("likes", "id").descending(); 
 		} else {
-			threadSort = Sort.by("createdAt").descending();
+			threadSort = Sort.by("createdAt", "id").descending();
 		}
-		Page<Thread> threadPages = threadService.getAll(page, size, threadSort);
-		List<Thread> threads = threadPages.getContent();
+		//Page<Thread> threadPages = threadService.getAll(page, size, threadSort);
+		//List<Thread> threads = threadPages.getContent();
+		List<ThreadAggregate> threads = threadService.getThreadsAggregated(principal == null ? null : principal.getName(), page, size, threadSort);
 		Map<String, Object> response = new HashMap<>();
 		response.put("threads", threads);
-		response.put("currentPage", threadPages.getNumber());
-		response.put("totalCount", threadPages.getTotalElements());
-		response.put("totalPages", threadPages.getTotalPages());
+		//response.put("currentPage", threadPages.getNumber());
+		response.put("pageCount", threads.size());
+		//response.put("totalCount", threadPages.getTotalElements());
+		//response.put("totalPages", threadPages.getTotalPages());
+		//response.put("threadsAggregate", otherThreads);
 		return new ResponseEntity<>(response, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
