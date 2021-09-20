@@ -38,6 +38,7 @@ public class PostServiceImpl implements PostService {
 			post.setUserId(user.getId());
 			post.setAuthor(username);
 			post.setThreadId(threadId);
+			post.setThreadSubject(threadOptional.get().getSubject());
 			post.setCreatedAt(new Date(System.currentTimeMillis()));
 			postRepo.save(post);
 		}

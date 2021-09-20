@@ -35,6 +35,8 @@ public class Post {
 	@NotNull(message = "Thread id cannot be null")
 	private String threadId;
 	
+	private String threadSubject;
+	
 	@NotNull(message = "Content cannot be null")
 	private String content;
 	
