@@ -53,7 +53,7 @@ public class ThreadController {
 		if (sort.equals("new")) {
 			threadSort = Sort.by("createdAt", "id").descending();
 		} else if (sort.equals("old")) {
-			threadSort = Sort.by("createdAt").ascending();
+			threadSort = Sort.by("createdAt", "id").ascending();
 		} else if (sort.equals("popular")) {
 			// 'likes' is not unique and does not guarantee
 			// ..a consistent sort order, so we have to sort
@@ -119,17 +119,6 @@ public class ThreadController {
 			return new ResponseEntity<>("Updated thread with id " + id, HttpStatus.OK);
 		} catch (ConstraintViolationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-		} catch (ThreadCollectionException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
-	}
-	
-	@PostMapping("/users/{username}/threads/{id}/likes")
-	public ResponseEntity<?> likeThread(@PathVariable("username") String username, @PathVariable("id") String id) {
-		try {
-			likedService.createLike(username, id);
-			threadService.incLikes(id, 1);
-			return new ResponseEntity<>("Thread with id " + id + " liked", HttpStatus.OK);
 		} catch (ThreadCollectionException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
