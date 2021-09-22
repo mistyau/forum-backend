@@ -12,8 +12,10 @@ import com.example.demo.exception.LikedCollectionException;
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.exception.UserCollectionException;
 import com.example.demo.model.Liked;
+import com.example.demo.model.Thread;
 import com.example.demo.model.User;
 import com.example.demo.repository.LikedRepository;
+import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -24,6 +26,9 @@ public class LikedServiceImpl implements LikedService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	ThreadRepository threadRepo;
 
 	@Override
 	public List<Liked> getUserLikes(String username) throws UserCollectionException {
@@ -40,12 +45,17 @@ public class LikedServiceImpl implements LikedService {
 	}
 
 	@Override
-	public void createLike(String username, String threadId) {
-		// TODO: check if record already exists
+	public void createLike(String username, String threadId) throws ThreadCollectionException {
 		User user = userRepo.findByUsername(username);
+		Optional<Thread> thread = threadRepo.findById(threadId);
+		if (!thread.isPresent()) {
+			throw new ThreadCollectionException(ThreadCollectionException.NotFoundException(threadId));
+		}
 		Liked like = new Liked();
 		like.setUserId(user.getId());
+		like.setThreadAuthor(thread.get().getAuthor());
 		like.setThreadId(threadId);
+		like.setThreadSubject(thread.get().getSubject());
 		like.setCreatedAt(new Date(System.currentTimeMillis()));
 		likedRepo.save(like);
 	}

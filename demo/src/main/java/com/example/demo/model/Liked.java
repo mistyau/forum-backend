@@ -30,5 +30,9 @@ public class Liked {
 	@Field(targetType = FieldType.OBJECT_ID)
 	private String userId;
 	
+	private String threadAuthor;
+	
+	private String threadSubject;
+	
 	private Date createdAt;
 }

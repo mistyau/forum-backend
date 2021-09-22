@@ -13,7 +13,7 @@ public interface LikedService {
 	
 	public Liked getSingleLiked(String threadId, String username);
 	
-	public void createLike(String username, String threadId);
+	public void createLike(String username, String threadId) throws ThreadCollectionException;
 	
 	public void deleteLike(String username, String threadId) throws LikedCollectionException, ThreadCollectionException;
 }
