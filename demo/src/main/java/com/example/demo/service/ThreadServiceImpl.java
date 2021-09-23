@@ -89,7 +89,7 @@ public class ThreadServiceImpl implements ThreadService {
 		
 		if (threadWithId.isPresent()) {
 			Thread threadToUpdate = threadWithId.get();
-			threadToUpdate.setSubject(thread.getSubject());
+			//threadToUpdate.setSubject(thread.getSubject());
 			threadToUpdate.setContent(thread.getContent());
 			threadToUpdate.setTags(thread.getTags());
 			threadToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
