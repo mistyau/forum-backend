@@ -111,8 +111,8 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public List<Thread> getAllTagThreads(String thread) {
-		List<Thread> threads = threadRepo.findByTag(thread);
+	public List<Thread> getAllTagThreads(String tag) {
+		List<Thread> threads = threadRepo.findByTag(tag);
 		if (threads.size() > 0) {
 			return threads;
 		} else {
@@ -144,6 +144,18 @@ public class ThreadServiceImpl implements ThreadService {
 		Pageable pageable = PageRequest.of(page, size, sort);
 		List<ThreadAggregate> threads = threadRepo.verySillyAggregation(user == null ? null : user.getId(), pageable);
 		return threads;
+	}
+
+	@Override
+	public long incComments(String id, int val) throws ThreadCollectionException {
+		Query query = new Query(Criteria.where("id").is(id));
+		Thread thread = mongoTemplate.findOne(query, Thread.class);
+		if (thread == null) {
+			throw new ThreadCollectionException(ThreadCollectionException.NotFoundException(id));
+		}
+		Update update = new Update().inc("comments", val);
+		UpdateResult ur = mongoTemplate.updateFirst(query, update, Thread.class);
+		return ur.getModifiedCount();
 	}
 	
 }

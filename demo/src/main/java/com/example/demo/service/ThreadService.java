@@ -31,5 +31,7 @@ public interface ThreadService{
 	
 	public long incLikes(String id, int val) throws ThreadCollectionException;
 	
+	public long incComments(String id, int val) throws ThreadCollectionException;
+	
 	public void deleteThreadById(String username, String id) throws ThreadCollectionException;
 }

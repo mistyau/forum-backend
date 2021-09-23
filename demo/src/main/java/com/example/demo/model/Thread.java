@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -43,6 +45,8 @@ public class Thread {
 	private List<String> tags;
 
 	private long likes;
+	
+	private long comments;
 	
 	@Indexed
 	private Date createdAt;
