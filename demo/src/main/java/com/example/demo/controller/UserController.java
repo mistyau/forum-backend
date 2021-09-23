@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.exception.RefreshTokenCollectionException;
 import com.example.demo.exception.UserCollectionException;
 import com.example.demo.model.User;
+import com.example.demo.model.UserInput;
 import com.example.demo.service.RefreshTokenService;
 import com.example.demo.service.UserService;
 
@@ -36,7 +37,7 @@ public class UserController {
 	private RefreshTokenService refreshTokenService;
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> createUser(@RequestBody User user) {
+	public ResponseEntity<?> createUser(@RequestBody UserInput user) {
 		try {
 			User userToSave = userService.registerNewUserAccount(user);
 			return new ResponseEntity<>(userToSave.getId(), HttpStatus.OK);
