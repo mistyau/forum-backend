@@ -24,6 +24,7 @@ import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Thread;
 import com.example.demo.model.ThreadAggregate;
 import com.example.demo.model.User;
+import com.example.demo.repository.LikedRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ThreadRepository;
 import com.example.demo.repository.UserRepository;
@@ -39,6 +40,9 @@ public class ThreadServiceImpl implements ThreadService {
 	
 	@Autowired
 	private PostRepository postRepo;
+	
+	@Autowired
+	private LikedRepository likedRepo;
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -107,6 +111,7 @@ public class ThreadServiceImpl implements ThreadService {
 		} else {
 			threadRepo.deleteById(id);
 			postRepo.deleteByThreadId(id);
+			likedRepo.deleteByThreadId(id);
 		}
 	}
 
