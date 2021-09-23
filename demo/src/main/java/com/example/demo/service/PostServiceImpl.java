@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.PostCollectionException;
+import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Post;
 import com.example.demo.model.Thread;
 import com.example.demo.model.User;
@@ -27,17 +32,20 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private PostRepository postRepo;
+	
+	@Autowired
+	private ThreadService threadService;
 
 	@Override
-	public void createPost(String username, String threadId, Post post) throws PostCollectionException {
-		Optional<Thread> threadOptional = threadRepo.findById(threadId);
+	public void createPost(String username, Post post) throws PostCollectionException {
+		Optional<Thread> threadOptional = threadRepo.findById(post.getThreadId());
 		if (!threadOptional.isPresent()) {
-			throw new PostCollectionException(PostCollectionException.ThreadNotFound(threadId));
+			throw new PostCollectionException(PostCollectionException.ThreadNotFound(post.getThreadId()));
 		} else {
 			User user = userRepo.findByUsername(username);
 			post.setUserId(user.getId());
 			post.setAuthor(username);
-			post.setThreadId(threadId);
+			post.setThreadId(post.getThreadId());
 			post.setThreadSubject(threadOptional.get().getSubject());
 			post.setCreatedAt(new Date(System.currentTimeMillis()));
 			postRepo.save(post);
@@ -74,6 +82,22 @@ public class PostServiceImpl implements PostService {
 			return new ArrayList<Post>();
 		}
 	}
+	
+	public List<Post> getUserPostsPage(String username, int page, int size, String sort) {
+		Sort postsSort;
+		if (sort.equals("old")) {
+			postsSort = Sort.by("createdAt", "id").ascending();
+		} else {
+			postsSort = Sort.by("createdAt", "id").descending();
+		}
+		Pageable pageable = PageRequest.of(page, size, postsSort);
+		List<Post> posts = postRepo.findByAuthorPage(username, pageable);
+		if (posts.size() > 0) {
+			return posts;
+		} else {
+			return new ArrayList<Post>();
+		}
+	}
 
 	@Override
 	public Post getSinglePost(String id) throws PostCollectionException {
@@ -100,12 +124,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void deletePostById(String username, String id) throws PostCollectionException {
+	public void deletePostById(String username, String id) throws PostCollectionException, ThreadCollectionException {
 		Optional<Post> postOptional = postRepo.findById(id);
 		if (!postOptional.isPresent()) {
 			throw new PostCollectionException(PostCollectionException.NotFoundException(id));
 		} else {
-			postRepo.deleteById(id);
+			// update thread comments counter
+			threadService.incComments(postOptional.get().getThreadId(), -1);
+			postRepo.deleteById(id);		
 		}
 	}
 
