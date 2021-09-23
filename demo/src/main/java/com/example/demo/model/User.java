@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -30,10 +32,8 @@ public class User implements Serializable {
 	private String id;
 	
 	@Indexed(unique=true)
-	@NotBlank(message = "Username cannot be blank")
 	private String username;
 
-	@NotBlank(message = "Password cannot be blank")
 	private String password;
 	
 	private Date createdAt;
