@@ -63,16 +63,11 @@ public class ThreadController {
 		} else {
 			threadSort = Sort.by("createdAt", "id").descending();
 		}
-		//Page<Thread> threadPages = threadService.getAll(page, size, threadSort);
-		//List<Thread> threads = threadPages.getContent();
+
 		List<ThreadAggregate> threads = threadService.getThreadsAggregated(principal == null ? null : principal.getName(), page, size, threadSort);
 		Map<String, Object> response = new HashMap<>();
 		response.put("threads", threads);
-		//response.put("currentPage", threadPages.getNumber());
 		response.put("pageCount", threads.size());
-		//response.put("totalCount", threadPages.getTotalElements());
-		//response.put("totalPages", threadPages.getTotalPages());
-		//response.put("threadsAggregate", otherThreads);
 		return new ResponseEntity<>(response, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
@@ -97,8 +92,8 @@ public class ThreadController {
 		}
 	}
 	
-	@GetMapping("/threads/search/{tag}")
-	public ResponseEntity<?> getTagThreads(@PathVariable("tag") String tag) {
+	@GetMapping(path = "/threads", params = {"tagged"})
+	public ResponseEntity<?> getTagThreads(@RequestParam(value = "tagged") String tag) {
 		List<Thread> threads = threadService.getAllTagThreads(tag);
 		return new ResponseEntity<>(threads, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
