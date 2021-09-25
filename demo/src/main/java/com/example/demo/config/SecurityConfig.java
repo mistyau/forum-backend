@@ -29,9 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private PasswordEncoder encoder;
 	
-	private static final String[] AUTH_WHITELIST = {		
+	private static final String[] AUTH_WHITELIST = {
 			"/api/v1/threads",
 			"/api/v1/threads/**",
+			"/api/v1/tags/**",
 			"/api/v1/auth/refresh/token"
 	};
 	
