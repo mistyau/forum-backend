@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.example.demo.exception.ThreadCollectionException;
+import com.example.demo.model.MostCommonTagsAggregate;
 import com.example.demo.model.Thread;
 import com.example.demo.model.ThreadAggregate;
 
@@ -24,6 +25,8 @@ public interface ThreadService{
 	public List<Thread> getAllUserThreads(String author) throws ThreadCollectionException;
 	
 	public List<Thread> getAllTagThreads(String thread);
+	
+	public List<MostCommonTagsAggregate> getMostCommonThreadTags();
 	
 	public Thread getSingleThread(String id) throws ThreadCollectionException;
 	

@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exception.ThreadCollectionException;
+import com.example.demo.model.MostCommonTagsAggregate;
 import com.example.demo.model.Thread;
 import com.example.demo.model.ThreadAggregate;
 import com.example.demo.model.User;
@@ -161,6 +162,16 @@ public class ThreadServiceImpl implements ThreadService {
 		Update update = new Update().inc("comments", val);
 		UpdateResult ur = mongoTemplate.updateFirst(query, update, Thread.class);
 		return ur.getModifiedCount();
+	}
+
+	@Override
+	public List<MostCommonTagsAggregate> getMostCommonThreadTags() {
+		List<MostCommonTagsAggregate> tags = threadRepo.commonTagsAggregation();
+		if (tags.size() > 0) {
+			return tags;
+		} else {
+			return new ArrayList<MostCommonTagsAggregate>();
+		}
 	}
 	
 }
