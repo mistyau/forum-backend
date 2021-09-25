@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.model.MostCommonTagsAggregate;
 import com.example.demo.model.Thread;
 import com.example.demo.model.ThreadAggregate;
 
@@ -48,4 +49,20 @@ public interface ThreadRepository extends MongoRepository<Thread, String> {
 			"  matches: 0\n" + 
 			"}}"})
 	List<ThreadAggregate> verySillyAggregation(String userid, Pageable page); 
+	
+	@Aggregation(pipeline = {"{$match: {\n" + 
+			"  tags: { $exists: true }\n" + 
+			"}}",
+			"{$unwind: {\n" + 
+			"  path: \"$tags\"\n" + 
+			"}}",
+			"{$group: {\n" + 
+			"  _id: \"$tags\",\n" + 
+			"  count: { $sum: 1 }\n" + 
+			"}}",
+			"{$sort: {\n" + 
+			"  count: -1\n" + 
+			"}}",
+			"{$limit: 5}"})
+	List<MostCommonTagsAggregate> commonTagsAggregation();
 }
