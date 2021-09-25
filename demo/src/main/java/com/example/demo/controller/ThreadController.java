@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ThreadCollectionException;
 import com.example.demo.model.Liked;
+import com.example.demo.model.MostCommonTagsAggregate;
 import com.example.demo.model.Thread;
 import com.example.demo.model.ThreadAggregate;
 import com.example.demo.service.LikedService;
@@ -71,6 +72,12 @@ public class ThreadController {
 		return new ResponseEntity<>(response, threads.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
 	}
 	
+	@GetMapping("/tags/top")
+	public ResponseEntity<?> getMostCommonTags() {
+		List<MostCommonTagsAggregate> tags = threadService.getMostCommonThreadTags();
+		return new ResponseEntity<>(tags, tags.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+	}
+	
 	@PostMapping("/users/{username}/threads")
 	public ResponseEntity<?> createThread(@PathVariable("username") String username, @RequestBody Thread thread) {
 		try {
@@ -102,7 +109,7 @@ public class ThreadController {
 	public ResponseEntity<?> getSingleThread(@PathVariable("id") String id) {
 		try {
 			return new ResponseEntity<>(threadService.getSingleThread(id), HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (ThreadCollectionException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
