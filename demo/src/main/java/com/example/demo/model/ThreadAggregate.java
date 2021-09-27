@@ -42,12 +42,12 @@ public class ThreadAggregate {
 
 	private long likes;
 	
+	private long comments;
+	
 	private boolean userLiked;
 	
 	@Indexed
 	private Date createdAt;
 	
 	private Date updatedAt;
-	
-	private List<Post> posts;
 }
