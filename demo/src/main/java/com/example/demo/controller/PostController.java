@@ -45,7 +45,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/users/{username}/posts")
-	public ResponseEntity<?> createPost(@PathVariable("username") String username, @PathVariable("id") String id, @RequestBody Post post) {
+	public ResponseEntity<?> createPost(@PathVariable("username") String username, @RequestBody Post post) {
 		try {
 			postService.createPost(username, post);
 			// update thread comments count
