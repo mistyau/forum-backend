@@ -36,13 +36,16 @@ public class Thread {
 	@NotNull(message="Username cannot be null")
 	private String author; // don't really care about data redundancy in mongodb
 	
-	@NotBlank(message="Subject cannot be blank")
+	@Size(min = 1, max = 80, message = "Subject must be 80 characters or less.")
+	@NotBlank(message="Subject cannot be blank.")
 	private String subject;
 	
+	@Size(max = 500, message = "Content must be 500 characters or less.")
 	private String content;
 	
+	@Size(max = 10, message = "Maximum of 10 tags allowed.")
 	@Indexed
-	private List<String> tags;
+	private List<@NotBlank(message = "Tag cannot be blank.") @Size(max = 30, message = "Length of tag must be 30 characters or less.")String> tags;
 
 	private long likes;
 	
