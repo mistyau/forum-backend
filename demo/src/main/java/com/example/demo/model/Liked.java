@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,9 +26,11 @@ public class Liked {
 	@Id
 	private String id;
 	
+	@NotNull(message="Thread id cannot be null")
 	@Field(targetType = FieldType.OBJECT_ID)
 	private String threadId;
 	
+	@NotNull(message="Thread id cannot be null")
 	@Field(targetType = FieldType.OBJECT_ID)
 	private String userId;
 	
