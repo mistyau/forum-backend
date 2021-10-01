@@ -87,18 +87,18 @@ public class UserController {
 			return new ResponseEntity<>("invalid_client", HttpStatus.BAD_REQUEST);
 		}
 
-		// invalidate all related tokens
+		
 		try {
+			// invalidate all related tokens
 			if (!refreshTokenService.isTokenValid(jtiToCheck)) { 
 				refreshTokenService.invalidateUserRefreshTokens(user);
 				return new ResponseEntity<>("invalid token", HttpStatus.BAD_REQUEST);
 			}
+			// invalidate current refresh token
+			refreshTokenService.invalidateRefreshTokenById(jtiToCheck);
 		} catch (RefreshTokenCollectionException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		
-		// invalidate current refresh token
-		refreshTokenService.invalidateRefreshTokenById(jtiToCheck);
 		
 		// return new access token and refresh token
 		String accessToken = Jwts.builder()

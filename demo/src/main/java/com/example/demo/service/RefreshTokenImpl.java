@@ -41,9 +41,12 @@ public class RefreshTokenImpl implements RefreshTokenService {
 	}
 
 	@Override
-	public void invalidateRefreshTokenById(String jti) {
+	public void invalidateRefreshTokenById(String jti) throws RefreshTokenCollectionException {
 		RefreshToken token = mongoTemplate.findOne(
 				Query.query(Criteria.where("jti").is(jti)), RefreshToken.class);
+		if (token == null) {
+			throw new RefreshTokenCollectionException(RefreshTokenCollectionException.NotFoundException(jti));
+		}
 		token.setValid(false);
 		token.setUpdatedAt(new Date(System.currentTimeMillis()));
 		mongoTemplate.save(token, "refreshTokens");

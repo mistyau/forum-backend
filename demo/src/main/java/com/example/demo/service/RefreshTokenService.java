@@ -8,7 +8,7 @@ public interface RefreshTokenService {
 	
 	public boolean isTokenValid(String jti) throws RefreshTokenCollectionException;
 	
-	public void invalidateRefreshTokenById(String id);
+	public void invalidateRefreshTokenById(String id) throws RefreshTokenCollectionException;
 	
 	public void invalidateUserRefreshTokens(String userId);
 }
