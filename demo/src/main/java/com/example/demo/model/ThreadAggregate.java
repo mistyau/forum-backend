@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
@@ -37,7 +36,6 @@ public class ThreadAggregate {
 	
 	private String content;
 	
-	@Indexed
 	private List<String> tags;
 
 	private long likes;
@@ -46,7 +44,6 @@ public class ThreadAggregate {
 	
 	private boolean userLiked;
 	
-	@Indexed
 	private Date createdAt;
 	
 	private Date updatedAt;
