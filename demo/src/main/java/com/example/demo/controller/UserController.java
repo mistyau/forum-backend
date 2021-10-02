@@ -48,6 +48,7 @@ public class UserController {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@PostMapping(path = "/refresh/token", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	public ResponseEntity<?> refreshToken(
 			@RequestParam MultiValueMap<String, String> paramMap) {

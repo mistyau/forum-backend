@@ -1,7 +1,6 @@
 package com.example.demo.security;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -19,16 +18,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.model.RefreshToken;
-import com.example.demo.repository.RefreshTokenRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
