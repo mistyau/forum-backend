@@ -112,7 +112,7 @@ public class UserController {
 		
 		String newRefreshToken = Jwts.builder()
 				.setSubject(user)
-				.setExpiration(new Date(System.currentTimeMillis() + 604_800_000))
+				.setExpiration(new Date(System.currentTimeMillis() + 28_800_000))
 				.claim("role", "REFRESH_TOKEN")
 				.setId(jti)
 				.signWith(SignatureAlgorithm.HS512, System.getenv("SECRET_KEY").getBytes())    

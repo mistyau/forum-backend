@@ -34,7 +34,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
 	private static final long EXPIRATION_TIME = 900_000;
-	private static final long REFRESH_EXPIRATION_TIME = 604_800_000;
+	private static final long REFRESH_EXPIRATION_TIME = 28_800_000;
 	@Autowired RefreshTokenService refreshTokenService;
 	
 	public AuthenticationFilter(AuthenticationManager authenticationManager, ApplicationContext ctx) {

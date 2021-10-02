@@ -31,7 +31,7 @@ public class RefreshToken {
 	@NotNull(message="User id cannot be null")
 	private String userId;
 	
-	@Indexed(expireAfterSeconds=604800) // expires in one week
+	@Indexed(expireAfterSeconds=28800) // expires in 8 hours
 	private Date createdAt;
 	
 	private Date updatedAt;
