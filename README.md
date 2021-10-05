@@ -1,11 +1,9 @@
 # forum-backend
-Java Spring Boot REST API
-
-## Features
+A REST API implemented with the Spring Boot framework. It uses an embedded Apache Tomcat web server provided by Spring Boot as the back-end web server. The Tomcat server also connects to a MongoDB Atlas cluster.
 
 ## Setup
 
-To run the application locally, you will need JDK version 11 installed on your machine. You may also want to install the Eclipse IDE, as it will be referenced directly in this readme. However, if you don't have the Eclipse IDE installed, then you can simply run the application from your command line.
+To run the application locally, you will need JDK version 11 installed on your machine. You may also want to install the Eclipse IDE, as it will be referenced directly in this readme. However, if you don't have the Eclipse IDE installed, then you can simply compile and run the application from your command line.
 
 1. Clone the repository.
 
@@ -35,7 +33,7 @@ To deploy this app, you will need the following:
     When prompted, select Java for the platform and Coretto 11 for the platform branch.
 3. Change the server port. In the Eclipse IDE, or the file editor of your choice, navigate to `demo > src > main > resources > application.properties`. Uncomment the line `server.port=5000`.
 
-4. Build the project and create the jar file. In the Eclipse IDE menu, select `Run > Run Configurations`. Then, select `Maven Build > demo` and create a new run configuration. Under `Goals` enter `clean install`. Check `Skip Tests`. Apply the settings and run the application. On success, you should see a new jar file at `demo > target > demo-0.0.1-SNAPSHOT.jar`.
+4. Build the project and create the executable jar file. In the Eclipse IDE menu, select `Run > Run Configurations`. Then, select `Maven Build > demo` and create a new run configuration. Under `Goals` enter `clean install`. Check `Skip Tests`. Apply the settings and run the application. On success, you should see a new jar file at `demo > target > demo-0.0.1-SNAPSHOT.jar`.
 
 5. Add the jar file path to `.elasticbeanstalk/config.yml`. The `config.yml` file should have the following entry:
 
@@ -58,4 +56,4 @@ To deploy this app, you will need the following:
 
     where `key` is `SECRET_KEY` and `value` is your secret key.
     
-    The application is now properly configured and deployed.
+    The application should now be properly configured and deployed to AWS Elastic Beanstalk.
