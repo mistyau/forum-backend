@@ -3,7 +3,7 @@ A REST API implemented with the Spring Boot framework. It uses an embedded Apach
 
 ## Setup
 
-To run the application locally, you will need JDK version 11 installed on your machine. You may also want to install the Eclipse IDE, as it will be referenced directly in this readme. However, if you don't have the Eclipse IDE installed, then you can simply compile and run the application from your command line.
+To run the application locally, you will need JRE 11 installed on your machine. You may also want to install the Eclipse IDE, as it will be referenced directly in this readme. However, if you don't have the Eclipse IDE installed, then you can simply compile and run the application from your command line.
 
 1. Clone the repository.
 
@@ -17,6 +17,15 @@ To run the application locally, you will need JDK version 11 installed on your m
 
 5. Run the application. Navigate to `DemoApplication.java` and right-click on it. Select `Run As > Java Application`. The application should now be running locally on your machine.
 
+### SSLHandshakeException
+
+During compilation you might encounter an SSLHandshakeException preventing the application from successfully connecting to a MongoDB Atlas cluster. In this case, change the TLS version to 1.2 in the JVM params.
+
+From the Eclipse IDE menu, select `Run Configurations`. Then navigate to `Java Application > DemoApplication > Arguments`. Under `VM arguments` add 
+```
+-Djdk.tls.client.protocols=TLSv1.2
+```
+Apply the new setting and run the application. The application should now successfully connect to the MongoDB Atlas cluster.
 
 ## Deploying to AWS Elastic Beanstalk
 
